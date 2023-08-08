@@ -28,18 +28,12 @@ def bucket_get():
     all_buckets = list(db.bucket.find({},{'_id':False}))
     return jsonify({'result': all_buckets})
 
-# update
+# 완료 버튼 클릭 시 done = 1로 업데이트
 @app.route("/update", methods=["POST"])
 def bucket_update():
-    num_receive = request.form['num_give']
-
+    num_receive = int(request.form['num_give'])
     db.bucket.update_one({'num':num_receive},{'$set':{'done':1}})
     return jsonify({'msg': '수정 완료!'})
-
-@app.route("/update", methods=["GET"])
-def bucket_done():
-    all_buckets = list(db.bucket.find({'done':1},{'_id':False}))
-    return jsonify({'result': all_buckets})
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
