@@ -101,38 +101,31 @@
             $("#bucket-list").empty();
             rows.forEach((a) => {
               let bucket = a["bucket"];
-              let num = a["num"]
-              let temp_html = `<li>
-                                    <h2 id="${num}">✅ ${bucket}</h2>
-                                    <button onclick="done(); show_done();" class="btn btn-outline-primary">완료!</button>
-                              </li>`;
+              let num = a["num"];
+              let temp_html = ``;
+              if (a['done']==0) {
+                  temp_html = `<li>
+                                    <h2>✅ ${bucket}</h2>
+                                    <button onclick="done(${num});" class="btn btn-outline-primary">완료!</button>
+                                </li>`
+              } else {
+                  temp_html = `<li>
+                                  <h2>✅ ${bucket} 완료!!</h2>
+                                </li>`
+              }
               $("#bucket-list").append(temp_html);
             });
           });
       }
-      function done() {
-        let num = 1;
+      function done(number) {
         let formData = new FormData();
-        formData.append("num_give", num);
+        formData.append("num_give", number);
 
         fetch("/update", { method: "POST", body: formData})
             .then((res) => res.json())
             .then((data) => {
-              alert(data["msg"]);
+              window.location.reload();
             });
-      }
-
-      function show_done() {
-        fetch("/update")
-          .then((res) => res.json())
-          .then((data) => {
-            let rows = data["result"];
-            let bucket = rows["bucket"];
-            let temp_html = `<li>
-                              <h2>✅ ${bucket} 완료!!</h2>
-                            </li>`;
-            $("#bucket-list").append(temp_html);
-          });
       }
 
       function save_bucket() {
